@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>House Data</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+
+<body>
+
+    <header class="header container">
+        <div class="header-superior container">
+            <a href="#"><img id="header-logo" src="styles/media/logo.jpg" alt="Logo TGIF"></a>
+            <a class="header-email" href="info@tgif.net" id="email">info@tgif.net</a>
+        </div>
+        <div class="menu container">
+            <nav class="navbar navbar-default navbar-expand-sm">
+                <ul class="nav navbar-nav">
+                    <li><a href="home.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Congress 113 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">House</a></li>
+                            <li><a href="senate-index.html">Senate</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Attendance<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="house-attendance.html">House</a></li>
+                            <li><a href="senate-attendance.html">Senate</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Loyalty<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="house-loyalty.html">House</a></li>
+                            <li><a href="senate-loyalty.html">Senate</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" id="app">
+        <article>
+            <h1>Congressmen</h1>
+            <p>
+                The major power of the House is to pass federal legislation that affects the entire country, although
+                its bills
+                must also be passed by the Senate and further agreed to by the U.S. President before becoming law
+                (unless both the House and Senate re-pass the legislation with a two-thirds majority in each chamber).
+                The House has some exclusive powers: the power to initiate revenue bills, to impeach officials
+                (impeached officials are
+                subsequently tried in the Senate), and to elect the U.S. President in case there is no majority in the
+                Electoral College.
+                Each U.S. state is represented in the House in proportion to its population as measured in the census,
+                but every
+                state is entitled to at least one representative.
+            </p>
+
+            <table class="table table-hover">
+                <thead id="table‐headers">
+                    <tr>
+                        <th>Name</th>
+                        <th>Party Affiliation</th>
+                        <th>State</th>
+                        <th>Seniority</th>
+                        <th>Percentage of votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="member in members">
+                        <td><a :href="member.url" target="_blank">{{ member.last_name }} {{ member.first_name }}
+                                {{ member.middle_name }}</a></td>
+                        <td>{{ member.party }}</td>
+                        <td>{{ member.state }}</td>
+                        <td>{{ member.seniority }}</td>
+                        <td>{{ member.votes_with_party_pct }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    </div>
+    <footer class="container page-footer">
+        <div class="container">
+            <p>
+                © 2016 TGIF || All Rights Reserved
+            </p>
+        </div>
+
+    </footer>
+    <script src="js/jsPrincipal.js"></script>
+    <script type="application/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                loading: false,
+                members: [],
+                statistics: {}
+            },
+            created() {
+                this.fetchData();
+            },
+            methods: {
+                async fetchData() {
+                    this.loading = true;
+                    this.members = await asignarApi('https://api.propublica.org/congress/v1/113/house/members.json');
+                    this.statistics = calcularEstadisticas(this.members);
+                    this.loading = false;
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>

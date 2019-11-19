@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TGIF Senate</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+
+<body>
+    <header class="header container">
+        <div class="header-superior container">
+            <a href="#"><img id="header-logo" src="styles/media/logo.jpg" alt="Logo TGIF"></a>
+            <a class="header-email" href="info@tgif.net" id="email">info@tgif.net</a>
+        </div>
+        <div class="menu container">
+            <nav class="navbar navbar-default navbar-expand-sm">
+                <ul class="nav navbar-nav">
+                    <li><a href="home.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Congress 113 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="house-index.html">House</a></li>
+                            <li><a href="#">Senate</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Attendance<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="house-attendance.html">House</a></li>
+                            <li><a href="senate-attendance.html">Senate</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Loyalty<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="house-loyalty.html">House</a></li>
+                            <li><a href="senate-loyalty.html">Senate</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" id="app">
+        <article>
+            <h1>Senators</h1>
+            <p>
+                First convened in 1789, the composition and powers of the Senate are established in Article One of the
+                U.S. Constitution.
+                Each state is represented by two senators, regardless of population, who serve staggered six-year terms.
+                The Senate has several exclusive powers not granted to the House, including consenting to treaties as a
+                precondition to
+                their ratification and consenting to or confirming appointments of Cabinet secretaries, federal judges,
+                other federal executive
+                officials, military officers, regulatory officials, ambassadors, and other federal uniformed officers,
+                as well as trial of
+                federal officials impeached by the House.
+            </p>
+
+            <table class="table table-hover">
+                <thead id="table‐headers">
+                    <tr>
+                        <th> Name</th>
+                        <th>Party Affiliation</th>
+                        <th>State</th>
+                        <th>Seniority</th>
+                        <th>Percentage of votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="member in members">
+                        <td><a :href="member.url" target="_blank">{{ member.last_name }} {{ member.first_name }}
+                                {{ member.middle_name }}</a></td>
+                        <td>{{ member.party }}</td>
+                        <td>{{ member.state }}</td>
+                        <td>{{ member.seniority }}</td>
+                        <td>{{ member.votes_with_party_pct }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+
+    </div>
+    <footer class="container page-footer">
+        <div class="container">
+            <p>
+                © 2016 TGIF || All Rights Reserved
+            </p>
+        </div>
+
+    </footer>
+    <script src="js/jsPrincipal.js"></script>
+    <script type="application/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                loading: false,
+                members: [],
+                statistics: {}
+            },
+            created() {
+                this.fetchData();
+            },
+            methods: {
+                async fetchData() {
+                    this.loading = true;
+                    this.members = await asignarApi('https://api.propublica.org/congress/v1/113/senate/members.json');
+                    this.statistics = calcularEstadisticas(this.members);
+                    this.loading = false;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
